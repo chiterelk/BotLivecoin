@@ -21,8 +21,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(Livecoin,&JLivecoin::gotOrder,this,&MainWindow::gotOrder);
 	connect(Livecoin,&JLivecoin::openedSellLimit,this,&MainWindow::openedSellLimit);
 	connect(Livecoin,&JLivecoin::canceledLimit,this,&MainWindow::canceledLimit);
-	
-	WSLivecoin->connect("ETH/USD");
+
+    connect(watchDog,&QTimer::timeout,this,&MainWindow::connectWS);
+    connectWS();
+
     Livecoin->getPaymentBalances(apiKey,secretKey);
 	connect(Livecoin,&JLivecoin::gotMaxBidMinAsk,this,&MainWindow::gotTickerBtcUsd);
 	Livecoin->getExchengeMaxBidMinAsk(currensyPair);
@@ -41,6 +43,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::gotTicker(JTicker ticker)
 {
+    watchDog->stop();
 	ui->labelAsk->setText(QString::number(ticker.getBest_ask(),'g',10));
 	ui->labelBid->setText(QString::number(ticker.getBest_bid(),'g',10));
 	ui->labelSpread->setText(QString::number(ticker.getSpread()*100,'g',3)+"%");
@@ -48,6 +51,7 @@ void MainWindow::gotTicker(JTicker ticker)
 		ask = ticker.getBest_ask();
 	if(ticker.getBest_bid()!=0)
         bid = ticker.getBest_bid();
+    watchDog->start(60000);
 }
 
 void MainWindow::gotCandles(QList<JCandle> _candles)
@@ -331,6 +335,11 @@ void MainWindow::showOrders()
     }
 }
 
+void MainWindow::connectWS()
+{
+    WSLivecoin->connect("ETH/USD");
+}
+
 
 void MainWindow::error(QString)
 {
@@ -403,6 +412,7 @@ void MainWindow::gotOrder(JOrder order)
 void MainWindow::on_pushButton_clicked()
 {
     mainTimer->start();
+    watchDog->start(60000);
     process = 0;
 
     numberOrders = ui->lineEditNumberOrders->text().toDouble();

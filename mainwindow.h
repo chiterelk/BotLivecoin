@@ -6,6 +6,7 @@
 #include <QList>
 #include <QGridLayout>
 #include <QNetworkAccessManager>
+#include <QTime>
 #include "JLivecoin/jwslivecoin.h"
 #include "JLivecoin/jlivecoin.h"
 #include "JLivecoin/jorder.h"
@@ -33,6 +34,7 @@ private:
 	QTimer *mainTimer = new QTimer(this);
 	JWSLivecoin *WSLivecoin = new JWSLivecoin(this);
 	JLivecoin *Livecoin = new JLivecoin(this);
+    QTimer *watchDog = new QTimer(this);
 
     QNetworkAccessManager * NAMTelegram = new QNetworkAccessManager(this);
 
@@ -98,6 +100,8 @@ private slots:
 
     void sendMesageToTelegram(QString _mesage);
     void showOrders();
+
+    void connectWS();
 
 
 

@@ -40,7 +40,7 @@ private:
 
 
 	QString apiKey = "KH91fPFZ2c4fVeQVr4FtnadbaeYAg9YR";
-    QString secretKey = "";
+	 QString secretKey = "Tzn8nF9D8788SPmVzjahAScCg8NkUjrX";
 
 	double ask = 0.0;
 	double bid = 0.0;
@@ -102,10 +102,11 @@ private slots:
     void showOrders();
 
     void connectWS();
-
+	void getPaymentBalances();
 
 
     void on_pushButton_clicked();
+	 void on_pushButton_2_clicked();
 };
 
 #endif // MAINWINDOW_H

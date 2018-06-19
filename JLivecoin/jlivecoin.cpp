@@ -46,11 +46,13 @@ void JLivecoin::getExchengeMaxBidMinAsk(QString _currencyPair)//получени
 
 void JLivecoin::getPaymentBalances(QString _apiKey, QString _secretKey, QString _currency)
 {
-    QString parametr = "currency=" + _currency;
-    QString url = QString(baseUrl + "/payment/balances?currency=" + _currency);
+	 QString parametr = "currency=" + _currency;
+	 QString url = QString(baseUrl + "/payment/balances?currency=" + _currency);
+
+
     QMessageAuthenticationCode code(QCryptographicHash::Sha256);
     code.setKey(_secretKey.toUtf8());
-    code.addData(parametr.toUtf8());
+	 code.addData(parametr.toUtf8());
 
     QNetworkRequest request;
     request.setUrl(QUrl(url));
@@ -215,8 +217,14 @@ void JLivecoin::gotData(QNetworkReply *reply)
             if(/*url.indexOf("currency=") >= 0*/1)
             {
                 qDebug()<<"вот оно как!";
-                QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
-                QJsonArray root = doc.array();
+
+
+
+
+
+
+					 QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+					 QJsonArray root = doc.array();
                 QVector<JBalance*> wallet;
                 if(root.count() > 0)
                 {
@@ -308,5 +316,7 @@ void JLivecoin::gotData(QNetworkReply *reply)
     }else{
         qDebug()<<"Error: "<<reply->errorString()<<'.';
 		  emit error(reply->errorString());
-    }
+	 }
 }
+
+

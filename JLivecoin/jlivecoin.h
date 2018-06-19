@@ -46,6 +46,8 @@ signals:
     void gotOrder(JOrder);
 	 void error(QString);
 
+
+
 public slots:
 };
 

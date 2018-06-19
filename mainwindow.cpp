@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(watchDog,&QTimer::timeout,this,&MainWindow::connectWS);
     connectWS();
 
-    Livecoin->getPaymentBalances(apiKey,secretKey);
+	getPaymentBalances();
 	connect(Livecoin,&JLivecoin::gotMaxBidMinAsk,this,&MainWindow::gotTickerBtcUsd);
 	Livecoin->getExchengeMaxBidMinAsk(currensyPair);
 
@@ -249,7 +249,7 @@ void MainWindow::mainProcess()
 
 void MainWindow::openedBuyLimit(double orderId)
 {
-	Livecoin->getPaymentBalances(apiKey,secretKey);
+	getPaymentBalances();
 	//openedBuyOrders << new JOrder(orderId);
 	openedBuyOrders.last()->setId(orderId);
 	buyOrders.removeFirst();
@@ -268,7 +268,7 @@ void MainWindow::openedBuyLimit(double orderId)
 }
 void MainWindow::openedSellLimit(double orderId)
 {
-	Livecoin->getPaymentBalances(apiKey,secretKey);
+	getPaymentBalances();
     if(process == 13)
     {
         openedSellOrders << new JOrder(orderId);
@@ -285,7 +285,7 @@ void MainWindow::openedSellLimit(double orderId)
 
 void MainWindow::canceledLimit(double quantity, double tradeQuantity)
 {
-	Livecoin->getPaymentBalances(apiKey,secretKey);
+	getPaymentBalances();
 	if(process == 12)
 	{
 
@@ -337,9 +337,14 @@ void MainWindow::showOrders()
 
 void MainWindow::connectWS()
 {
-    WSLivecoin->connect("ETH/USD");
+	WSLivecoin->connect("ETH/USD");
 }
 
+void MainWindow::getPaymentBalances()
+{
+	Livecoin->getPaymentBalances(apiKey,secretKey,"ETH");
+	Livecoin->getPaymentBalances(apiKey,secretKey,"USD");
+}
 
 void MainWindow::error(QString)
 {
@@ -425,4 +430,9 @@ void MainWindow::on_pushButton_clicked()
     ui->groupBox_5->setHidden(true);
     ui->console->append("Бот запущен");
     sendMesageToTelegram("Бот запущен.");
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+	 Livecoin->getPaymentBalances(apiKey,secretKey,"BTC,USD");
 }

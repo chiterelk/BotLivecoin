@@ -66,6 +66,22 @@ void MainWindow::gotCandles(QList<JCandle> _candles)
 
 void MainWindow::gotBalance(QVector<JBalance *> wallet)
 {
+	for(int i = 0; i<wallet.count();i++)
+	{
+			if(wallet.at(i)->getCurrency()=="USD")
+			{
+				usdTotal = wallet.at(i)->getTotal();
+				usdAvailable = wallet.at(i)->getAvailable();
+				usdTrade = wallet.at(i)->getTrade();
+			}
+			if(wallet.at(i)->getCurrency()=="ETH")
+			{
+				ethTotal = wallet.at(i)->getTotal();
+				ethAvailable = wallet.at(i)->getAvailable();
+				ethTrade = wallet.at(i)->getTrade();
+
+			}
+	}
 	if(ui->hideZeroBalances->isChecked())
 	{
 		for(int i = wallet.count()-1; i>=0; i--)

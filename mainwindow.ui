@@ -252,8 +252,14 @@
        </item>
        <item row="0" column="1">
         <widget class="QCheckBox" name="hideZeroBalances">
+         <property name="layoutDirection">
+          <enum>Qt::RightToLeft</enum>
+         </property>
          <property name="text">
           <string>Hide zero balances.</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

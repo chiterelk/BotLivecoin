@@ -16,8 +16,7 @@ int JTablModel::columnCount(const QModelIndex &parent) const
 {
 	if(listId.count())
 		return 3;
-	//return 0;
-	return 3;
+	return 0;
 }
 
 QVariant JTablModel::data(const QModelIndex &index, int role) const
@@ -32,7 +31,7 @@ QVariant JTablModel::data(const QModelIndex &index, int role) const
 		switch(role)
 		{
 		case Qt::DisplayRole:
-			return listId.at(row);
+			return QString::number(listId.at(row),'g',20);
 		case Qt::TextAlignmentRole:
 			return Qt::AlignCenter;
 		case Qt::BackgroundColorRole:
@@ -98,7 +97,7 @@ QVariant JTablModel::headerData(int section, Qt::Orientation orientation, int ro
 		switch(section)
 		{
 		case 0:
-			return QString("id");
+			return QString("Id");
 		case 1:
 			return QString("Prace");
 		case 2:

@@ -14,6 +14,7 @@
 #include "jsellorder.h"
 #include "JLivecoin/jcandle.h"
 #include "jtablmodel.h"
+#include "jlistbalancemodel.h"
 
 
 namespace Ui {
@@ -88,10 +89,11 @@ private:
 	double summQuntity = 0;
 
 	JTablModel *listOpenedOrders = new JTablModel(this);
+	JListBalanceModel *listBalance = new JListBalanceModel(this);
 
 private slots:
 	void gotTicker(JTicker ticker);
-    void gotCandles(QList<JCandle>);
+	void gotCandles(QList<JCandle>);
 	void gotBalance(QVector<JBalance*>);
 	void gotTickerBtcUsd(JMaxBidMinAsk);
 	void mainProcess();
@@ -101,10 +103,10 @@ private slots:
 	void openedSellLimit(double orderId);
 	void canceledLimit(double quantity, double tradeQuantity);
 
-    void sendMesageToTelegram(QString _mesage);
-    void showOrders();
+	void sendMesageToTelegram(QString _mesage);
+	void showOrders();
 
-    void connectWS();
+	void connectWS();
 	void getPaymentBalances();
 
 
@@ -113,6 +115,7 @@ private slots:
 
 
 
+	 void on_hideZeroBalances_clicked();
 };
 
 #endif // MAINWINDOW_H

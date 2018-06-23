@@ -32,10 +32,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->console->append("Программа запущена. Готовлюсь к виставлению ордеров.");
 	connect(mainTimer,&QTimer::timeout,this,&MainWindow::mainProcess);
 	mainTimer->setInterval(period);
+
 	ui->tableViewOrders->setModel(listOpenedOrders);
-
-
 	ui->tableViewOrders->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+	ui->tableViewBalances->setModel(listBalance);
+	ui->tableViewBalances->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
 }
 
@@ -64,42 +66,23 @@ void MainWindow::gotCandles(QList<JCandle> _candles)
 
 void MainWindow::gotBalance(QVector<JBalance *> wallet)
 {
-	for(int i = 0; i<wallet.count();i++)
+	if(ui->hideZeroBalances->isChecked())
 	{
-		if(wallet.at(i)->getCurrency()=="USD")
+		for(int i = wallet.count()-1; i>=0; i--)
 		{
-			ui->labelUsdTotal->setText(QString::number(wallet.at(i)->getTotal()));
-			ui->labelUsdAvailable->setText(QString::number(wallet.at(i)->getAvailable()));
-			ui->labelUsdTrade->setText(QString::number(wallet.at(i)->getTrade()));
-			usdTotal = wallet.at(i)->getTotal();
-			usdAvailable = wallet.at(i)->getAvailable();
-			usdTrade = wallet.at(i)->getTrade();
+			if(wallet.at(i)->getTotal() == 0 && wallet.at(i)->getAvailable()==0 && wallet.at(i)->getTrade()==0)
+			{
+				wallet.remove(i);
+			}
 		}
-		if(wallet.at(i)->getCurrency()=="ETH")
-		{
-			ui->labelEthTotal->setText(QString::number(wallet.at(i)->getTotal()));
-			ui->labelEthAvailable->setText(QString::number(wallet.at(i)->getAvailable()));
-			ui->labelEthTrade->setText(QString::number(wallet.at(i)->getTrade()));
-			ethTotal = wallet.at(i)->getTotal();
-			ethAvailable = wallet.at(i)->getAvailable();
-			ethTrade = wallet.at(i)->getTrade();
-		}
-        if(wallet.at(i)->getCurrency()=="XEM")
-        {
-            ui->labelXemTotal->setText(QString::number(wallet.at(i)->getTotal()));
-            ui->labelXemAvailable->setText(QString::number(wallet.at(i)->getAvailable()));
-            ui->labelXemTrade->setText(QString::number(wallet.at(i)->getTrade()));
-            xemTotal = wallet.at(i)->getTotal();
-            xemAvailable = wallet.at(i)->getAvailable();
-            xemTrade = wallet.at(i)->getTrade();
-        }
 	}
+	listBalance->setBalance(wallet);
 }
 
 void MainWindow::gotTickerBtcUsd(JMaxBidMinAsk _tickerBtcUsd)
 {
 	disconnect(Livecoin,&JLivecoin::gotMaxBidMinAsk,this,&MainWindow::gotTickerBtcUsd);
-    minValueUsd = 0.0002 * _tickerBtcUsd.getMaxBid();
+	 minValueUsd = 0.0002 * _tickerBtcUsd.getMaxBid();
 	//qDebug()<<minValueUsd;
 }
 
@@ -451,3 +434,8 @@ void MainWindow::resizeEvent(QResizeEvent*)
 
 }
 
+
+void MainWindow::on_hideZeroBalances_clicked()
+{
+	 getPaymentBalances();
+}

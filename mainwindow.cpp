@@ -51,7 +51,7 @@ void MainWindow::gotTicker(JTicker ticker)
 		ask = ticker.getBest_ask();
 	if(ticker.getBest_bid()!=0)
         bid = ticker.getBest_bid();
-    watchDog->start(60000);
+    watchDog->start(600000);
 }
 
 void MainWindow::gotCandles(QList<JCandle> _candles)
@@ -112,8 +112,8 @@ void MainWindow::mainProcess()
 			double summ = 0;
 			for(double i = 0; i<numberOrders;i++)
 			{
-                //summ += 1 + martingeil * i;
-                summ += 1 + pow(martingeil,i);
+                summ += 1 + martingeil * i;
+                //summ += 1 + pow(martingeil,i);
 			}
 			double stepQuantity = Depozit/summ;
 			qDebug()<<"Первий ордер"<<stepQuantity;
@@ -136,9 +136,10 @@ void MainWindow::mainProcess()
 
                     double price = maxPrice - i * stepPrice;
                     //qDebug()<<"Quantity"<<i+1<<": "<<(stepQuantity + martingeil * stepQuantity * i)/price;
-                    buyOrders << new JSellOrder(price,(stepQuantity + pow(martingeil,i) * stepQuantity)/price,currensyPair);
+                    //buyOrders << new JSellOrder(price,(stepQuantity + pow(martingeil,i) * stepQuantity)/price,currensyPair);
+                    buyOrders << new JSellOrder(price,(stepQuantity + martingeil * stepQuantity * i)/price,currensyPair);
 				}
-                qDebug()<<"buyOrders.count()"<<buyOrders.count();
+                //qDebug()<<"buyOrders.count()"<<buyOrders.count();
 				process = 1;
                 sendMesageToTelegram("Начинаю выставлять ордера на покупку.");
                 ui->console->append("Начинаю выставлять ордера на покупку.");
@@ -166,26 +167,27 @@ void MainWindow::mainProcess()
 	}
 	if(process == 2)//Мониторинг ордеров.
 	{
-        if(openedSellOrders.isEmpty())
+        if(!openedSellOrders.isEmpty())
         {
-            if(bid > (openedBuyOrders.first()->getPrice()*(1+otstup)*(1+procent)))
+            if(openedSellOrders.count() == numberOrders)
             {
-                ui->console->append("Цена ушла. Переставляю ордера");
-                sendMesageToTelegram("Цена ушла. Переставляю ордера.");
-                process = 4;
+                if(bid > (openedBuyOrders.first()->getPrice()*(1+otstup)*(1+procent)))
+                            {
+                                ui->console->append("Цена ушла. Переставляю ордера");
+                                sendMesageToTelegram("Цена ушла. Переставляю ордера.");
+                                process = 4;
+                            }
             }
-        }else
-        {
-            if(!openedBuyOrders.isEmpty())
-            {
-                Livecoin->getOrder(openedBuyOrders.first()->getId(),apiKey,secretKey);
-            }
-            if(!openedSellOrders.isEmpty())
-            {
-                Livecoin->getOrder(openedSellOrders.first()->getId(),apiKey,secretKey);
-            }
-        }
 
+        }
+        if(!openedBuyOrders.isEmpty())
+        {
+            Livecoin->getOrder(openedBuyOrders.first()->getId(),apiKey,secretKey);
+        }
+        if(!openedSellOrders.isEmpty())
+        {
+            Livecoin->getOrder(openedSellOrders.first()->getId(),apiKey,secretKey);
+        }
 
 	}
 	if(process == 3)//Перестановка ордера на продажу
@@ -312,7 +314,7 @@ void MainWindow::sendMesageToTelegram(QString _mesage)
 
 void MainWindow::showOrders()
 {
-    ui->console->clear();
+    ui->textEditListOrder->clear();
     if(!openedBuyOrders.isEmpty())
     {
         for(int i = 0;i<openedBuyOrders.count();i++)
@@ -342,8 +344,10 @@ void MainWindow::connectWS()
 
 void MainWindow::getPaymentBalances()
 {
-	Livecoin->getPaymentBalances(apiKey,secretKey,"ETH");
-	Livecoin->getPaymentBalances(apiKey,secretKey,"USD");
+
+    //Livecoin->getPaymentBalances(apiKey,secretKey,"USD");
+    //Livecoin->getPaymentBalances(apiKey,secretKey,"ETH");
+    Livecoin->getPaymentBalances(apiKey,secretKey);
 }
 
 void MainWindow::error(QString)
@@ -380,8 +384,8 @@ void MainWindow::gotOrder(JOrder order)
 				qDebug()<<"midPrice: "<<midPrice;
 				qDebug()<<"summQuntity: "<<summQuntity;
 				openedBuyOrders.removeFirst();
-                sendMesageToTelegram("Ордер на покупку исполнен. Начинаю заново.");
-                ui->console->append("Ордер на покупку исполнен. Начинаю заново.");
+                sendMesageToTelegram("Ордер на покупку исполнен.");
+                ui->console->append("Ордер на покупку исполнен.");
 
 				process = 3;
 			}
@@ -417,7 +421,7 @@ void MainWindow::gotOrder(JOrder order)
 void MainWindow::on_pushButton_clicked()
 {
     mainTimer->start();
-    watchDog->start(60000);
+    watchDog->start(600000);
     process = 0;
 
     numberOrders = ui->lineEditNumberOrders->text().toDouble();
@@ -432,7 +436,3 @@ void MainWindow::on_pushButton_clicked()
     sendMesageToTelegram("Бот запущен.");
 }
 
-void MainWindow::on_pushButton_2_clicked()
-{
-	 Livecoin->getPaymentBalances(apiKey,secretKey,"BTC,USD");
-}

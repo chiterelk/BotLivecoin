@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>668</width>
-    <height>586</height>
+    <height>717</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,19 +15,125 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_4">
-    <item row="2" column="0" rowspan="3">
-     <widget class="QGroupBox" name="groupBox_4">
+    <item row="0" column="0" colspan="2">
+     <widget class="QGroupBox" name="groupBox_5">
       <property name="title">
-       <string>Console</string>
+       <string>Start</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <widget class="QTextEdit" name="console"/>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>Start</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Перекрытие:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="lineEditPerekritie">
+           <property name="text">
+            <string>0.3</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="label_13">
+           <property name="text">
+            <string>Желаемая прибыль:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLineEdit" name="lineEditProfit">
+           <property name="text">
+            <string>0.02</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Количество ордеров:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="lineEditNumberOrders">
+           <property name="text">
+            <string>5</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLabel" name="label_14">
+           <property name="text">
+            <string>Процент перестановки:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLineEdit" name="lineEditProcent">
+           <property name="text">
+            <string>0.04</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Отступ:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="lineEditOtstup">
+           <property name="text">
+            <string>0.04</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QLabel" name="label_16">
+           <property name="text">
+            <string>Процент от депозита:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QLineEdit" name="lineEdit_deposit">
+           <property name="text">
+            <string>0.98</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>Мартингейл:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="lineEditMartingaile">
+           <property name="text">
+            <string>0.06</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>
     </item>
-    <item row="2" column="1">
+    <item row="1" column="1">
      <widget class="QGroupBox" name="groupBox">
       <property name="title">
        <string>Pair:</string>
@@ -78,7 +184,7 @@
       </layout>
      </widget>
     </item>
-    <item row="3" column="1">
+    <item row="2" column="1">
      <widget class="QGroupBox" name="groupBox_2">
       <property name="title">
        <string>Wallet</string>
@@ -199,7 +305,7 @@
       </layout>
      </widget>
     </item>
-    <item row="4" column="1">
+    <item row="3" column="1">
      <widget class="QGroupBox" name="groupBox_3">
       <property name="title">
        <string>ListOrder</string>
@@ -215,129 +321,16 @@
       </layout>
      </widget>
     </item>
-    <item row="1" column="0" colspan="2">
-     <widget class="QGroupBox" name="groupBox_5">
+    <item row="1" column="0" rowspan="3">
+     <widget class="QGroupBox" name="groupBox_4">
       <property name="title">
-       <string>Start</string>
+       <string>Console</string>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QPushButton" name="pushButton">
-         <property name="text">
-          <string>Start</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QGridLayout" name="gridLayout_3">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>Перекрытие:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="lineEditPerekritie">
-           <property name="text">
-            <string>0.3</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QLabel" name="label_13">
-           <property name="text">
-            <string>Желаемая прибыль:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="QLineEdit" name="lineEditProfit">
-           <property name="text">
-            <string>0.02</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>Количество ордеров:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="lineEditNumberOrders">
-           <property name="text">
-            <string>5</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QLabel" name="label_14">
-           <property name="text">
-            <string>Процент перестановки:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3">
-          <widget class="QLineEdit" name="lineEditProcent">
-           <property name="text">
-            <string>0.04</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>Отступ:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="lineEditOtstup">
-           <property name="text">
-            <string>0.04</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QLabel" name="label_16">
-           <property name="text">
-            <string>Процент от депозита:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3">
-          <widget class="QLineEdit" name="lineEdit_deposit">
-           <property name="text">
-            <string>0.98</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_12">
-           <property name="text">
-            <string>Мартингейл:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLineEdit" name="lineEditMartingaile">
-           <property name="text">
-            <string>0.06</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QTextEdit" name="console"/>
        </item>
       </layout>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QPushButton" name="pushButton_2">
-      <property name="text">
-       <string>PushButton</string>
-      </property>
      </widget>
     </item>
    </layout>
@@ -348,7 +341,7 @@
      <x>0</x>
      <y>0</y>
      <width>668</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

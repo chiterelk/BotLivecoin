@@ -162,23 +162,27 @@ void JLivecoin::gotData(QNetworkReply *reply)
 {
     if(!reply->error())
     {
-		  //qDebug()<<reply->url().toString();
-
-
+        //qDebug()<<reply->url().toString();
+        QString data = reply->readAll();
+        if(data.indexOf("0E-8"))
+        {
+            data.replace("0E-8","0");
+        }
         QString url = reply->url().toString();
+
 
         if(url.indexOf("/exchange/ticker") >= 0)// если это пришли аски, биды и обьемы....
         {
             if(url.indexOf("currencyPair=") >= 0)
             {
                 //если указанна пара
-                QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+                QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8());
                 QJsonObject root = doc.object();
                 qDebug()<<root;
 
             }else{
                 //если не указанна пара
-                QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+                QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8());
                 QJsonArray root = doc.array();
                 qDebug()<<root.at(0).toObject();
             }
@@ -189,7 +193,7 @@ void JLivecoin::gotData(QNetworkReply *reply)
             if(url.indexOf("currencyPair=") >= 0)
             {
                 //если указанна пара
-                QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+                QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8());
                 QJsonObject root = doc.object();
                 QJsonObject currencyPair = root.value("currencyPairs").toArray().at(0).toObject();
                 qDebug()<<currencyPair.value("symbol").toString();
@@ -197,7 +201,7 @@ void JLivecoin::gotData(QNetworkReply *reply)
                 emit gotMaxBidMinAsk(maxBidMinAsk);
             }else{
                 //если не указанна пара
-                QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+                QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8());
 
 
                 //дописать
@@ -216,15 +220,8 @@ void JLivecoin::gotData(QNetworkReply *reply)
         {
             if(/*url.indexOf("currency=") >= 0*/1)
             {
-                qDebug()<<"вот оно как!";
-
-
-
-
-
-
-					 QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
-					 QJsonArray root = doc.array();
+                QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8());
+                QJsonArray root = doc.array();
                 QVector<JBalance*> wallet;
                 if(root.count() > 0)
                 {
@@ -278,27 +275,27 @@ void JLivecoin::gotData(QNetworkReply *reply)
 
         if(url.indexOf("/exchange/selllimit")>=1)
         {
-            QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+            QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8());
             QJsonObject root = doc.object();
 				qDebug()<<root.value("orderId").toDouble();
             emit openedSellLimit(root.value("orderId").toDouble());
         }//end selllimit
         if(url.indexOf("/exchange/buylimit")>=1)
         {
-            QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+            QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8());
             QJsonObject root = doc.object();
             emit openedBuyLimit(root.value("orderId").toDouble());
         }//end buylimit
 
         if(url.indexOf("/exchange/cancellimit")>=1)
         {
-            QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+            QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8());
             QJsonObject root = doc.object();
             emit canceledLimit(root.value("quantity").toDouble(),root.value("tradeQuantity").toDouble());
         }//end cancellimit
         if(url.indexOf("/exchange/order")>=1)
         {
-            QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+            QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8());
             QJsonObject root = doc.object();
             JOrder order;
             order.setId(root.value("id").toDouble());

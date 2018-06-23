@@ -41,7 +41,7 @@ private:
 
 
 	QString apiKey = "KH91fPFZ2c4fVeQVr4FtnadbaeYAg9YR";
-	  QString secretKey = "";
+	QString secretKey = "";
 
 	double ask = 0.0;
 	double bid = 0.0;

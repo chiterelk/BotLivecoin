@@ -1,4 +1,5 @@
 #include "jtablmodel.h"
+#include "QDebug"
 
 JTablModel::JTablModel(QObject *parent) :
 	QAbstractListModel(parent)
@@ -13,13 +14,16 @@ int JTablModel::rowCount(const QModelIndex &parent) const
 
 int JTablModel::columnCount(const QModelIndex &parent) const
 {
-	return 3;
+	if(listId.count())
+		return 3;
+	return 0;
 }
 
 QVariant JTablModel::data(const QModelIndex &index, int role) const
 {
-	if(index.isValid())
+	if(!index.isValid())
 		return QVariant();
+
 	int row = index.row();
 	int column = index.column();
 	switch(column){
@@ -27,15 +31,15 @@ QVariant JTablModel::data(const QModelIndex &index, int role) const
 		switch(role)
 		{
 		case Qt::DisplayRole:
-			return QString::number(listId.at(row),'g',20);
+			return listId.at(row);
 		case Qt::TextAlignmentRole:
 			return Qt::AlignCenter;
 		case Qt::BackgroundColorRole:
 			if(listType.at(row)=="sell")
 			{
-				return QBrush(Qt::red);
+				return QBrush(QColor("#EAC4C4"));
 			}else{
-				return QBrush(Qt::blue);
+				return QBrush(QColor("#BBD9ED"));
 			}
 		default:
 			return QVariant();
@@ -44,15 +48,15 @@ QVariant JTablModel::data(const QModelIndex &index, int role) const
 		switch(role)
 		{
 		case Qt::DisplayRole:
-			return QString::number(listPrice.at(row),'g',20);
+			return listPrice.at(row);
 		case Qt::TextAlignmentRole:
 			return Qt::AlignCenter;
 		case Qt::BackgroundColorRole:
 			if(listType.at(row)=="sell")
 			{
-				return QBrush(Qt::red);
+				return QBrush(QColor("#EAC4C4"));
 			}else{
-				return QBrush(Qt::blue);
+				return QBrush(QColor("#BBD9ED"));
 			}
 		default:
 			return QVariant();
@@ -61,15 +65,15 @@ QVariant JTablModel::data(const QModelIndex &index, int role) const
 		switch(role)
 		{
 		case Qt::DisplayRole:
-			return QString::number(listQuantity.at(row),'g',20);
+			return listQuantity.at(row);
 		case Qt::TextAlignmentRole:
 			return Qt::AlignCenter;
 		case Qt::BackgroundColorRole:
 			if(listType.at(row)=="Sell")
 			{
-				return QBrush(Qt::red);
+				return QBrush(QColor("#EAC4C4"));
 			}else{
-				return QBrush(Qt::blue);
+				return QBrush(QColor("#BBD9ED"));
 			}
 		default:
 			return QVariant();

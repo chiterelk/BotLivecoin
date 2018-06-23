@@ -157,6 +157,7 @@ void MainWindow::mainProcess()
 
 		if(!buyOrders.isEmpty())
 		{
+			qDebug()<<currensyPair<<buyOrders.first()->getPrice()<<buyOrders.first()->getQuantity();
 			Livecoin->buyLimit(currensyPair,buyOrders.first()->getPrice(),buyOrders.first()->getQuantity(),apiKey,secretKey);
 			openedBuyOrders.append(new JOrder());
 			openedBuyOrders.last()->setPrice(buyOrders.first()->getPrice());

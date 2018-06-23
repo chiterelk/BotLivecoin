@@ -29,8 +29,10 @@ JWSLivecoin::~JWSLivecoin()
 void JWSLivecoin::connect(QString _currensyPair)
 {
     if(timer->isActive())
+	 {
         timer->stop();
-    WSocket->open(QUrl(QStringLiteral("ws://ws.api.livecoin.net/ws/beta")));
+	 }
+	 WSocket->open(QUrl(QStringLiteral("wss://ws.api.livecoin.net/ws/beta")));
     currensyPair_ = _currensyPair;
 }
 

@@ -315,9 +315,18 @@
         <layout class="QVBoxLayout" name="verticalLayoutListOrder">
          <item>
           <widget class="QTableView" name="tableViewOrders">
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
            <property name="showGrid">
             <bool>false</bool>
            </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
           </widget>
          </item>
         </layout>

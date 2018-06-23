@@ -16,7 +16,8 @@ int JTablModel::columnCount(const QModelIndex &parent) const
 {
 	if(listId.count())
 		return 3;
-	return 0;
+	//return 0;
+	return 3;
 }
 
 QVariant JTablModel::data(const QModelIndex &index, int role) const
@@ -87,6 +88,26 @@ Qt::ItemFlags JTablModel::flags(const QModelIndex &index) const
 		return Qt::NoItemFlags;
 	}
 	return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
+QVariant JTablModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+	switch(role)
+	{
+	case Qt::DisplayRole:
+		switch(section)
+		{
+		case 0:
+			return QString("id");
+		case 1:
+			return QString("Prace");
+		case 2:
+			return QString("Quantity");
+		}
+	default:
+			return QVariant();
+	}
+
 }
 
 void JTablModel::addRow(double _id, double _price, double _quantity, QString _type)

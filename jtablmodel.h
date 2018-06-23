@@ -18,6 +18,8 @@ public:
 	int columnCount(const QModelIndex &parent) const;
 	QVariant data(const QModelIndex &index, int role) const;
 	Qt::ItemFlags flags(const QModelIndex &index) const;
+	QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+
 	void addRow(double _id, double _price, double _quantity, QString _type);
 	void clear();
 private:

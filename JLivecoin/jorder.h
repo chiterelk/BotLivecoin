@@ -18,7 +18,7 @@ public:
     void setBlocked(double _blocked){   blocked_=_blocked;  };
     void setBlockedRemain(double _blockedRemain){   blockedRemain_=_blockedRemain; };
     void setCommissionRate(double _commission_rate){    commission_rate_=_commission_rate;  };
-
+	 void setType(QString _type){ type_ = _type;	};
 
     double getId(){    return id_; };
     double getClientId(){  return clientId_;   };
@@ -30,6 +30,8 @@ public:
     double getBlocked(){   return blocked_;    };
     double getBlockedRemain(){ return blockedRemain_;  };
     double getCommissionRate(){   return commission_rate_;    };
+	 QString getType(){ return type_;	};
+
 private:
     double id_;
     double clientId_;
@@ -41,6 +43,7 @@ private:
     double blocked_;
     double blockedRemain_;
     double commission_rate_;
+	 QString type_;
 };
 
 #endif // JORDER_H

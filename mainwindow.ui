@@ -314,7 +314,11 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayoutListOrder">
          <item>
-          <widget class="QTextEdit" name="textEditListOrder"/>
+          <widget class="QTableView" name="tableViewOrders">
+           <property name="showGrid">
+            <bool>false</bool>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -341,7 +345,7 @@
      <x>0</x>
      <y>0</y>
      <width>668</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

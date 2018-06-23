@@ -13,6 +13,7 @@
 
 #include "jsellorder.h"
 #include "JLivecoin/jcandle.h"
+#include "jtablmodel.h"
 
 
 namespace Ui {
@@ -40,7 +41,7 @@ private:
 
 
 	QString apiKey = "KH91fPFZ2c4fVeQVr4FtnadbaeYAg9YR";
-     QString secretKey = "";
+	  QString secretKey = "";
 
 	double ask = 0.0;
 	double bid = 0.0;
@@ -84,6 +85,8 @@ private:
 
 	double midPrice = 0;
 	double summQuntity = 0;
+
+	JTablModel *listOpenedOrders = new JTablModel(this);
 
 
 private slots:

@@ -33,7 +33,8 @@ SOURCES += \
     JLivecoin/jticker.cpp \
     JLivecoin/jwslivecoin.cpp \
     jsellorder.cpp \
-    JLivecoin/jcandle.cpp
+    JLivecoin/jcandle.cpp \
+    jtablmodel.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,7 +45,8 @@ HEADERS += \
     JLivecoin/jticker.h \
     JLivecoin/jwslivecoin.h \
     jsellorder.h \
-    JLivecoin/jcandle.h
+    JLivecoin/jcandle.h \
+    jtablmodel.h
 
 FORMS += \
         mainwindow.ui

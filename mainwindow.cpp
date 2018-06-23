@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->console->append("Программа запущена. Готовлюсь к виставлению ордеров.");
 	connect(mainTimer,&QTimer::timeout,this,&MainWindow::mainProcess);
 	mainTimer->setInterval(period);
-    //mainTimer->start();
+	ui->tableViewOrders->setModel(listOpenedOrders);
 
 }
 
@@ -254,6 +254,7 @@ void MainWindow::openedBuyLimit(double orderId)
 	getPaymentBalances();
 	//openedBuyOrders << new JOrder(orderId);
 	openedBuyOrders.last()->setId(orderId);
+	openedBuyOrders.last()->setType("Buy");
 	buyOrders.removeFirst();
 	if(!buyOrders.isEmpty())
 	{
@@ -274,6 +275,7 @@ void MainWindow::openedSellLimit(double orderId)
     if(process == 13)
     {
         openedSellOrders << new JOrder(orderId);
+		  openedSellOrders.last()->setType("Sell");
         process = 2;
         showOrders();
 
@@ -314,27 +316,31 @@ void MainWindow::sendMesageToTelegram(QString _mesage)
 
 void MainWindow::showOrders()
 {
-    ui->textEditListOrder->clear();
-    if(!openedBuyOrders.isEmpty())
-    {
-        for(int i = 0;i<openedBuyOrders.count();i++)
-        {
-            ui->textEditListOrder->append("<font color=\"red\">"+QString::number(openedBuyOrders.at(i)->getId(),'g',10)+"  "
-            +QString::number(openedBuyOrders.at(i)->getPrice(),'g',10)+"  "
-            +QString::number(openedBuyOrders.at(i)->getQuantity(),'g',10)+"</font>");
-        }
+	 listOpenedOrders->clear();
+	 if(!openedSellOrders.isEmpty())
+	 {
+		  for(int i = 0;i<openedSellOrders.count();i++)
+		  {
+			  listOpenedOrders->addRow(openedSellOrders.at(i)->getId(),openedSellOrders.at(i)->getPrice(),openedSellOrders.at(i)->getQuantity(),
+											  openedSellOrders.at(i)->getType());
+		  }
 
-    }
-    if(!openedSellOrders.isEmpty())
-    {
-        for(int i = 0;i<openedSellOrders.count();i++)
-        {
-            ui->textEditListOrder->append("<font color=\"green\">"+QString::number(openedSellOrders.at(i)->getId(),'g',10)+"  "
-            +QString::number(openedSellOrders.at(i)->getPrice(),'g',10)+"  "
-            +QString::number(openedSellOrders.at(i)->getQuantity(),'g',10)+"</font>");
-        }
+	 }
+	 if(!openedBuyOrders.isEmpty())
+	 {
+		  for(int i = 0;i<openedBuyOrders.count();i++)
+		  {
+			  listOpenedOrders->addRow(openedBuyOrders.at(i)->getId(),openedBuyOrders.at(i)->getPrice(),openedBuyOrders.at(i)->getQuantity(),
+											  openedBuyOrders.at(i)->getType());
+		  }
 
-    }
+	 }
+
+
+
+
+
+
 }
 
 void MainWindow::connectWS()

@@ -31,6 +31,7 @@ public:
 
 
 private:
+
 	Ui::MainWindow *ui;
 	QTimer *mainTimer = new QTimer(this);
 	JWSLivecoin *WSLivecoin = new JWSLivecoin(this);
@@ -88,7 +89,6 @@ private:
 
 	JTablModel *listOpenedOrders = new JTablModel(this);
 
-
 private slots:
 	void gotTicker(JTicker ticker);
     void gotCandles(QList<JCandle>);
@@ -109,6 +109,9 @@ private slots:
 
 
     void on_pushButton_clicked();
+	 void resizeEvent(QResizeEvent*);
+
+
 
 };
 

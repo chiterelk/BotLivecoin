@@ -34,6 +34,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	mainTimer->setInterval(period);
 	ui->tableViewOrders->setModel(listOpenedOrders);
 
+
+	ui->tableViewOrders->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
 }
 
 MainWindow::~MainWindow()
@@ -441,5 +444,10 @@ void MainWindow::on_pushButton_clicked()
     ui->groupBox_5->setHidden(true);
     ui->console->append("Бот запущен");
     sendMesageToTelegram("Бот запущен.");
+}
+
+void MainWindow::resizeEvent(QResizeEvent*)
+{
+
 }
 

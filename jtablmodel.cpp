@@ -35,7 +35,7 @@ QVariant JTablModel::data(const QModelIndex &index, int role) const
 		case Qt::TextAlignmentRole:
 			return Qt::AlignCenter;
 		case Qt::BackgroundColorRole:
-			if(listType.at(row)=="sell")
+			if(listType.at(row)=="Sell")
 			{
 				return QBrush(QColor("#EAC4C4"));
 			}else{
@@ -52,7 +52,7 @@ QVariant JTablModel::data(const QModelIndex &index, int role) const
 		case Qt::TextAlignmentRole:
 			return Qt::AlignCenter;
 		case Qt::BackgroundColorRole:
-			if(listType.at(row)=="sell")
+			if(listType.at(row)=="Sell")
 			{
 				return QBrush(QColor("#EAC4C4"));
 			}else{

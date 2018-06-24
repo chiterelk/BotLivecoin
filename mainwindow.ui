@@ -40,7 +40,7 @@
          <item row="3" column="3">
           <widget class="QLineEdit" name="lineEdit_deposit">
            <property name="text">
-            <string>0.98</string>
+            <string>0.99</string>
            </property>
           </widget>
          </item>
@@ -75,7 +75,7 @@
          <item row="0" column="3">
           <widget class="QLineEdit" name="lineEditMartingaile">
            <property name="text">
-            <string>0.06</string>
+            <string>0.30</string>
            </property>
           </widget>
          </item>
@@ -124,7 +124,7 @@
          <item row="1" column="1">
           <widget class="QLineEdit" name="lineEditPerekritie">
            <property name="text">
-            <string>0.3</string>
+            <string>0.4</string>
            </property>
           </widget>
          </item>

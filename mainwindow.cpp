@@ -286,6 +286,8 @@ void MainWindow::openedSellLimit(double orderId)
     {
         openedSellOrders << new JOrder(orderId);
 		  openedSellOrders.last()->setType("Sell");
+		  openedSellOrders.last()->setPrice(midPrice*(1+profit));
+		  openedSellOrders.last()->setQuantity(summQuntity-0.00000001);
         process = 2;
         showOrders();
 

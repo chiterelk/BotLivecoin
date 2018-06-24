@@ -1,4 +1,6 @@
 #include "jlistbalancemodel.h"
+#include <QColor>
+#include <QBrush>
 
 JListBalanceModel::JListBalanceModel(QObject *parent)
 {
@@ -12,10 +14,10 @@ int JListBalanceModel::rowCount(const QModelIndex &parent) const
 
 int JListBalanceModel::columnCount(const QModelIndex &parent) const
 {
-	//if(balance.count())
-	//{
-		//return 0;
-	//}
+	if(!balance.count())
+	{
+		return 0;
+	}
 	return 4;
 }
 
@@ -36,8 +38,15 @@ QVariant JListBalanceModel::data(const QModelIndex &index, int role) const
 		{
 		case Qt::DisplayRole:
 			return balance.at(row)->getCurrency();
+		case Qt::EditRole:
+			return balance.at(row)->getCurrency();
 		case Qt::TextAlignmentRole:
 			return Qt::AlignCenter;
+		case Qt::BackgroundColorRole:
+			if(balance.at(row)->getCurrency()=="ETH" || balance.at(row)->getCurrency()=="BTC" || balance.at(row)->getCurrency()=="USD")
+			{
+				return QBrush(QColor("#F2F2F2"));
+			}
 		default:
 			return QVariant();
 		}
@@ -46,8 +55,15 @@ QVariant JListBalanceModel::data(const QModelIndex &index, int role) const
 		{
 		case Qt::DisplayRole:
 			return balance.at(row)->getTotal();
+		case Qt::EditRole:
+			return balance.at(row)->getTotal();
 		case Qt::TextAlignmentRole:
 			return Qt::AlignCenter;
+		case Qt::BackgroundColorRole:
+			if(balance.at(row)->getCurrency()=="ETH" || balance.at(row)->getCurrency()=="BTC" || balance.at(row)->getCurrency()=="USD")
+			{
+				return QBrush(QColor("#F2F2F2"));
+			}
 		default:
 			return QVariant();
 		}
@@ -56,8 +72,15 @@ QVariant JListBalanceModel::data(const QModelIndex &index, int role) const
 		{
 		case Qt::DisplayRole:
 			return balance.at(row)->getAvailable();
+		case Qt::EditRole:
+			return balance.at(row)->getAvailable();
 		case Qt::TextAlignmentRole:
 			return Qt::AlignCenter;
+		case Qt::BackgroundColorRole:
+			if(balance.at(row)->getCurrency()=="ETH" || balance.at(row)->getCurrency()=="BTC" || balance.at(row)->getCurrency()=="USD")
+			{
+				return QBrush(QColor("#F2F2F2"));
+			}
 		default:
 			return QVariant();
 		}
@@ -66,8 +89,15 @@ QVariant JListBalanceModel::data(const QModelIndex &index, int role) const
 		{
 		case Qt::DisplayRole:
 			return balance.at(row)->getTrade();
+		case Qt::EditRole:
+			return balance.at(row)->getTotal();
 		case Qt::TextAlignmentRole:
 			return Qt::AlignCenter;
+		case Qt::BackgroundColorRole:
+			if(balance.at(row)->getCurrency()=="ETH" || balance.at(row)->getCurrency()=="BTC" || balance.at(row)->getCurrency()=="USD")
+			{
+				return QBrush(QColor("#F2F2F2"));
+			}
 		default:
 			return QVariant();
 		}
@@ -80,7 +110,7 @@ Qt::ItemFlags JListBalanceModel::flags(const QModelIndex &index) const
 	{
 		return Qt::NoItemFlags;
 	}
-	return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+	return Qt::ItemIsEnabled | Qt::ItemIsEditable;
 }
 
 void JListBalanceModel::setBalance(QVector<JBalance *> _balance)

@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->setupUi(this);
 	
 	connect(WSLivecoin,&JWSLivecoin::gotTicker,this,&MainWindow::gotTicker);
-    connect(WSLivecoin,&JWSLivecoin::gotCandles,this,&MainWindow::gotCandles);
+	connect(WSLivecoin,&JWSLivecoin::gotCandles,this,&MainWindow::gotCandles);
 	connect(Livecoin,&JLivecoin::gotBalance,this,&MainWindow::gotBalance);
 	connect(Livecoin,&JLivecoin::openedBuyLimit,this,&MainWindow::openedBuyLimit);
 	connect(Livecoin,&JLivecoin::error,this,&MainWindow::error);
@@ -37,6 +37,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->tableViewOrders->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
 	ui->tableViewBalances->setModel(listBalance);
+	ui->tableViewBalances->setColumnWidth(0,ui->tableViewBalances->width()/4);
+	ui->tableViewBalances->setColumnWidth(1,ui->tableViewBalances->width()/4);
+	ui->tableViewBalances->setColumnWidth(2,ui->tableViewBalances->width()/4);
+	ui->tableViewBalances->setColumnWidth(3,ui->tableViewBalances->width()/4);
 	ui->tableViewBalances->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
 }
@@ -88,7 +92,10 @@ void MainWindow::gotBalance(QVector<JBalance *> wallet)
 		{
 			if(wallet.at(i)->getTotal() == 0 && wallet.at(i)->getAvailable()==0 && wallet.at(i)->getTrade()==0)
 			{
-				wallet.remove(i);
+				if(!(wallet.at(i)->getCurrency()=="ETH" || wallet.at(i)->getCurrency()=="USD" || wallet.at(i)->getCurrency()=="BTC"))
+				{
+					wallet.remove(i);
+				}
 			}
 		}
 	}

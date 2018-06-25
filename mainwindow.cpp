@@ -43,6 +43,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->tableViewBalances->setColumnWidth(3,ui->tableViewBalances->width()/4);
 	ui->tableViewBalances->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
+	ui->statusBar->addWidget(processInf,0);
+	ui->statusBar->addWidget(pingInf,0);
+	showProcess();
+
+
 }
 
 MainWindow::~MainWindow()
@@ -150,12 +155,15 @@ void MainWindow::mainProcess()
 				}
                 //qDebug()<<"buyOrders.count()"<<buyOrders.count();
 				process = 1;
-                sendMesageToTelegram("Начинаю выставлять ордера на покупку.");
-                ui->console->append("Начинаю выставлять ордера на покупку.");
+
+				showProcess();
+				sendMesageToTelegram("Начинаю выставлять ордера на покупку.");
+				ui->console->append("Начинаю выставлять ордера на покупку.");
 			}else{
 				ui->console->append("Недостаточный баланс для вибраного количества ордеров!");
                 sendMesageToTelegram("Недостаточный баланс для вибраного количества ордеров!");
                 process = 100;
+					 showProcess();
 				mainTimer->stop();
                 ui->groupBox_5->setHidden(false);
 			}
@@ -172,6 +180,7 @@ void MainWindow::mainProcess()
 			openedBuyOrders.last()->setPrice(buyOrders.first()->getPrice());
 			openedBuyOrders.last()->setQuantity(buyOrders.first()->getQuantity());
 			process = 11;
+			showProcess();
 			mainTimer->setInterval(1000);
 		}
 	}
@@ -186,6 +195,7 @@ void MainWindow::mainProcess()
                                 ui->console->append("Цена ушла. Переставляю ордера");
                                 sendMesageToTelegram("Цена ушла. Переставляю ордера.");
                                 process = 4;
+										  showProcess();
                             }
             }
 
@@ -205,6 +215,7 @@ void MainWindow::mainProcess()
 		if(openedSellOrders.isEmpty())
 		{
 			process = 13;
+			showProcess();
 //			if(midPrice > bid*(1-otstup))
 //			{
 
@@ -213,6 +224,7 @@ void MainWindow::mainProcess()
 
 		}else{
 			process = 12;
+			showProcess();
 			Livecoin->cancelLimit(currensyPair,openedSellOrders.first()->getId(),apiKey,secretKey);
 
 		}
@@ -222,6 +234,7 @@ void MainWindow::mainProcess()
 		if(!openedBuyOrders.isEmpty())
 		{
 			process = 14;
+			showProcess();
 			Livecoin->cancelLimit(currensyPair,openedBuyOrders.first()->getId(),apiKey,secretKey);
 		}else{
             //mainTimer->stop();
@@ -235,6 +248,7 @@ void MainWindow::mainProcess()
             summQuntity = 0;
 
             process = 0;
+				showProcess();
 		}
 	}
 //	if(process == 5)
@@ -269,14 +283,16 @@ void MainWindow::openedBuyLimit(double orderId)
 	if(!buyOrders.isEmpty())
 	{
 		process = 1;
+		showProcess();
 	}else{
 		mainTimer->setInterval(period);
 		process = 2;
-        showOrders();
-        sendMesageToTelegram("Ордера на покупку виставлены.");
-        ui->console->append("Ордера на покупку виставлены.");
-        sendMesageToTelegram("Мониторю.");
-        ui->console->append("Мониторю.");
+		showProcess();
+		showOrders();
+		sendMesageToTelegram("Ордера на покупку виставлены.");
+		ui->console->append("Ордера на покупку виставлены.");
+		sendMesageToTelegram("Мониторю.");
+		ui->console->append("Мониторю.");
 	}
 }
 void MainWindow::openedSellLimit(double orderId)
@@ -289,6 +305,7 @@ void MainWindow::openedSellLimit(double orderId)
 		  openedSellOrders.last()->setPrice(midPrice*(1+profit));
 		  openedSellOrders.last()->setQuantity(summQuntity-0.00000001);
         process = 2;
+		  showProcess();
         showOrders();
 
         sendMesageToTelegram("Ордер на продажу виставлен/переставлен.");//
@@ -308,14 +325,16 @@ void MainWindow::canceledLimit(double quantity, double tradeQuantity)
 		if(!openedSellOrders.isEmpty())
 			openedSellOrders.clear();
 		process = 3;
-        showOrders();
+		showProcess();
+		showOrders();
 	}
 	if(process == 14)
 	{
 
 		openedBuyOrders.removeFirst();
 		process = 4;
-        showOrders();
+		showProcess();
+		showOrders();
 	}
 
 }
@@ -373,18 +392,22 @@ void MainWindow::error(QString)
 	if(process == 11)
 	{
 		process = 1;
+		showProcess();
 	}
 	if(process == 12)
 	{
 		process = 3;
+		showProcess();
 	}
 	if(process == 13)
 	{
 		process = 3;
+		showProcess();
 	}
 	if(process == 14)
 	{
 		process = 4;
+		showProcess();
 	}
 }
 
@@ -406,6 +429,7 @@ void MainWindow::gotOrder(JOrder order)
                 ui->console->append("Ордер на покупку исполнен.");
 
 				process = 3;
+				showProcess();
 			}
 		}
 		if(order.getStatus() == "CANCELLED")
@@ -413,6 +437,7 @@ void MainWindow::gotOrder(JOrder order)
 			//Пока отладка
 			openedBuyOrders.removeFirst();
 			process = 4;
+			showProcess();
 			//
 		}
 	}
@@ -423,6 +448,7 @@ void MainWindow::gotOrder(JOrder order)
             if(order.getStatus() == "EXECUTED")
             {
                 process = 4;
+					 showProcess();
                 openedSellOrders.clear();
                 sendMesageToTelegram("Ордер на продажу исполнен.");
                 ui->console->append("Ордер на продажу исполнен.");
@@ -441,6 +467,7 @@ void MainWindow::on_pushButton_clicked()
     mainTimer->start();
     watchDog->start(600000);
     process = 0;
+	 showProcess();
 
     numberOrders = ui->lineEditNumberOrders->text().toDouble();
     martingeil = ui->lineEditMartingaile->text().toDouble();
@@ -462,5 +489,15 @@ void MainWindow::resizeEvent(QResizeEvent*)
 
 void MainWindow::on_hideZeroBalances_clicked()
 {
-	 getPaymentBalances();
+	getPaymentBalances();
+}
+
+void MainWindow::showPing()
+{
+
+}
+
+void MainWindow::showProcess()
+{
+	processInf->setText("Process: " + QString::number((int) process));
 }

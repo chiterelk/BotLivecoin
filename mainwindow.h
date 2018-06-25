@@ -15,6 +15,7 @@
 #include "JLivecoin/jcandle.h"
 #include "jtablmodel.h"
 #include "jlistbalancemodel.h"
+#include <QLabel>
 
 
 namespace Ui {
@@ -91,6 +92,9 @@ private:
 	JTablModel *listOpenedOrders = new JTablModel(this);
 	JListBalanceModel *listBalance = new JListBalanceModel(this);
 
+	QLabel *processInf = new QLabel(this);
+	QLabel *pingInf = new QLabel(this);
+
 private slots:
 	void gotTicker(JTicker ticker);
 	void gotCandles(QList<JCandle>);
@@ -109,13 +113,13 @@ private slots:
 	void connectWS();
 	void getPaymentBalances();
 
-
     void on_pushButton_clicked();
 	 void resizeEvent(QResizeEvent*);
 
-
-
 	 void on_hideZeroBalances_clicked();
+
+	 void showPing();
+	 void showProcess();
 };
 
 #endif // MAINWINDOW_H

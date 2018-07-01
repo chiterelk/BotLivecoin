@@ -38,9 +38,9 @@ private:
 	QTimer *mainTimer = new QTimer(this);
 	JWSLivecoin *WSLivecoin = new JWSLivecoin(this);
 	JLivecoin *Livecoin = new JLivecoin(this);
-    QTimer *watchDog = new QTimer(this);
+	QTimer *watchDog = new QTimer(this);
 
-    QNetworkAccessManager * NAMTelegram = new QNetworkAccessManager(this);
+	QNetworkAccessManager * NAMTelegram = new QNetworkAccessManager(this);
 
 
 	QString apiKey = "KH91fPFZ2c4fVeQVr4FtnadbaeYAg9YR";
@@ -66,6 +66,8 @@ private:
 
 	int period = 5000;
 
+	bool firstConnect = true;
+
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
     double perekritie = 0.010;//перекрытие в относительних единицах.
@@ -81,10 +83,13 @@ private:
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 	QString currensyPair = "ETH/USD";
-	QList <JSellOrder*> buyOrders;
+	QString mainCurrensy = "USD";
+	QString secondaryCurrensy = "ETH";
 
-	QList <JOrder*> openedBuyOrders;
-	QList <JOrder*> openedSellOrders;
+	QList <JSellOrder> buyOrders;
+
+	QList <JOrder> openedBuyOrders;
+	QList <JOrder> openedSellOrders;
 
 	double midPrice = 0;
 	double summQuntity = 0;
@@ -98,7 +103,7 @@ private:
 private slots:
 	void gotTicker(JTicker ticker);
 	void gotCandles(QList<JCandle>);
-	void gotBalance(QVector<JBalance*>);
+	void gotBalance(QVector<JBalance>);
 	void gotTickerBtcUsd(JMaxBidMinAsk);
 	void mainProcess();
 	void openedBuyLimit(double orderId);
@@ -120,6 +125,7 @@ private slots:
 
 	 void showPing();
 	 void showProcess();
+	 void on_comboBoxSymbol_currentTextChanged(const QString &arg1);
 };
 
 #endif // MAINWINDOW_H

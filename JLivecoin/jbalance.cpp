@@ -1,6 +1,6 @@
 #include "jbalance.h"
 
-JBalance::JBalance(QObject *parent) : QObject(parent)
+JBalance::JBalance()
 {
 
 }

@@ -12,6 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui(new Ui::MainWindow)
 {
 	ui->setupUi(this);
+	ui->groupBoxPair->hide();
+
+	on_comboBoxSymbol_currentTextChanged(ui->comboBoxSymbol->currentText());
 	
 	connect(WSLivecoin,&JWSLivecoin::gotTicker,this,&MainWindow::gotTicker);
 	connect(WSLivecoin,&JWSLivecoin::gotCandles,this,&MainWindow::gotCandles);
@@ -22,8 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(Livecoin,&JLivecoin::openedSellLimit,this,&MainWindow::openedSellLimit);
 	connect(Livecoin,&JLivecoin::canceledLimit,this,&MainWindow::canceledLimit);
 
-    connect(watchDog,&QTimer::timeout,this,&MainWindow::connectWS);
-    connectWS();
+	connect(watchDog,&QTimer::timeout,this,&MainWindow::connectWS);
+	//connectWS();
 
 	getPaymentBalances();
 	connect(Livecoin,&JLivecoin::gotMaxBidMinAsk,this,&MainWindow::gotTickerBtcUsd);
@@ -57,7 +60,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::gotTicker(JTicker ticker)
 {
-    watchDog->stop();
+	watchDog->stop();
 	ui->labelAsk->setText(QString::number(ticker.getBest_ask(),'g',10));
 	ui->labelBid->setText(QString::number(ticker.getBest_bid(),'g',10));
 	ui->labelSpread->setText(QString::number(ticker.getSpread()*100,'g',3)+"%");
@@ -66,6 +69,11 @@ void MainWindow::gotTicker(JTicker ticker)
 	if(ticker.getBest_bid()!=0)
         bid = ticker.getBest_bid();
     watchDog->start(600000);
+	 if(firstConnect)
+	 {
+		 process = 0;
+		 ui->groupBoxPair->show();
+	 }
 }
 
 void MainWindow::gotCandles(QList<JCandle> _candles)
@@ -73,21 +81,21 @@ void MainWindow::gotCandles(QList<JCandle> _candles)
 
 }
 
-void MainWindow::gotBalance(QVector<JBalance *> wallet)
+void MainWindow::gotBalance(QVector<JBalance> wallet)
 {
 	for(int i = 0; i<wallet.count();i++)
 	{
-			if(wallet.at(i)->getCurrency()=="USD")
+			if(wallet.at(i).getCurrency()=="USD")
 			{
-				usdTotal = wallet.at(i)->getTotal();
-				usdAvailable = wallet.at(i)->getAvailable();
-				usdTrade = wallet.at(i)->getTrade();
+				usdTotal = wallet.at(i).getTotal();
+				usdAvailable = wallet.at(i).getAvailable();
+				usdTrade = wallet.at(i).getTrade();
 			}
-			if(wallet.at(i)->getCurrency()=="ETH")
+			if(wallet.at(i).getCurrency()=="ETH")
 			{
-				ethTotal = wallet.at(i)->getTotal();
-				ethAvailable = wallet.at(i)->getAvailable();
-				ethTrade = wallet.at(i)->getTrade();
+				ethTotal = wallet.at(i).getTotal();
+				ethAvailable = wallet.at(i).getAvailable();
+				ethTrade = wallet.at(i).getTrade();
 
 			}
 	}
@@ -95,9 +103,9 @@ void MainWindow::gotBalance(QVector<JBalance *> wallet)
 	{
 		for(int i = wallet.count()-1; i>=0; i--)
 		{
-			if(wallet.at(i)->getTotal() == 0 && wallet.at(i)->getAvailable()==0 && wallet.at(i)->getTrade()==0)
+			if(wallet.at(i).getTotal() == 0 && wallet.at(i).getAvailable()==0 && wallet.at(i).getTrade()==0)
 			{
-				if(!(wallet.at(i)->getCurrency()=="ETH" || wallet.at(i)->getCurrency()=="USD" || wallet.at(i)->getCurrency()=="BTC"))
+				if(!(wallet.at(i).getCurrency()=="ETH" || wallet.at(i).getCurrency()=="USD" || wallet.at(i).getCurrency()=="BTC"))
 				{
 					wallet.remove(i);
 				}
@@ -110,14 +118,16 @@ void MainWindow::gotBalance(QVector<JBalance *> wallet)
 void MainWindow::gotTickerBtcUsd(JMaxBidMinAsk _tickerBtcUsd)
 {
 	disconnect(Livecoin,&JLivecoin::gotMaxBidMinAsk,this,&MainWindow::gotTickerBtcUsd);
-	 minValueUsd = 0.0002 * _tickerBtcUsd.getMaxBid();
+	minValueUsd = 0.0002 * _tickerBtcUsd.getMaxBid();
 	//qDebug()<<minValueUsd;
 }
 
 void MainWindow::mainProcess()
 {
-
-
+	if(process == 100)
+	{
+		connectWS();
+	}
 	if(process == 0) //бот не торгует. Ожидаю момента для входа в сделку.
 	{
 		Depozit = depozit * usdAvailable;
@@ -130,7 +140,7 @@ void MainWindow::mainProcess()
                 //summ += 1 + pow(martingeil,i);
 			}
 			double stepQuantity = Depozit/summ;
-			qDebug()<<"Первий ордер"<<stepQuantity;
+			//qDebug()<<"Первий ордер"<<stepQuantity;
 			double maxPrice = (bid - bid * otstup);
             double stepPrice;
             if(numberOrders != 1)
@@ -151,7 +161,7 @@ void MainWindow::mainProcess()
                     double price = maxPrice - i * stepPrice;
                     //qDebug()<<"Quantity"<<i+1<<": "<<(stepQuantity + martingeil * stepQuantity * i)/price;
                     //buyOrders << new JSellOrder(price,(stepQuantity + pow(martingeil,i) * stepQuantity)/price,currensyPair);
-                    buyOrders << new JSellOrder(price,(stepQuantity + martingeil * stepQuantity * i)/price,currensyPair);
+						  buyOrders << JSellOrder(price,(stepQuantity + martingeil * stepQuantity * i)/price,currensyPair);
 				}
                 //qDebug()<<"buyOrders.count()"<<buyOrders.count();
 				process = 1;
@@ -174,11 +184,11 @@ void MainWindow::mainProcess()
 
 		if(!buyOrders.isEmpty())
 		{
-			qDebug()<<currensyPair<<buyOrders.first()->getPrice()<<buyOrders.first()->getQuantity();
-			Livecoin->buyLimit(currensyPair,buyOrders.first()->getPrice(),buyOrders.first()->getQuantity(),apiKey,secretKey);
-			openedBuyOrders.append(new JOrder());
-			openedBuyOrders.last()->setPrice(buyOrders.first()->getPrice());
-			openedBuyOrders.last()->setQuantity(buyOrders.first()->getQuantity());
+			//qDebug()<<currensyPair<<buyOrders.first()->getPrice()<<buyOrders.first()->getQuantity();
+			Livecoin->buyLimit(currensyPair,buyOrders.first().getPrice(),buyOrders.first().getQuantity(),apiKey,secretKey);
+			openedBuyOrders.append(JOrder());
+			openedBuyOrders.last().setPrice(buyOrders.first().getPrice());
+			openedBuyOrders.last().setQuantity(buyOrders.first().getQuantity());
 			process = 11;
 			showProcess();
 			mainTimer->setInterval(1000);
@@ -190,7 +200,7 @@ void MainWindow::mainProcess()
         {
             if(openedSellOrders.count() == numberOrders)
             {
-                if(bid > (openedBuyOrders.first()->getPrice()*(1+otstup)*(1+procent)))
+					 if(bid > (openedBuyOrders.first().getPrice()*(1+otstup)*(1+procent)))
                             {
                                 ui->console->append("Цена ушла. Переставляю ордера");
                                 sendMesageToTelegram("Цена ушла. Переставляю ордера.");
@@ -202,11 +212,11 @@ void MainWindow::mainProcess()
         }
         if(!openedBuyOrders.isEmpty())
         {
-            Livecoin->getOrder(openedBuyOrders.first()->getId(),apiKey,secretKey);
+				Livecoin->getOrder(openedBuyOrders.first().getId(),apiKey,secretKey);
         }
         if(!openedSellOrders.isEmpty())
         {
-            Livecoin->getOrder(openedSellOrders.first()->getId(),apiKey,secretKey);
+				Livecoin->getOrder(openedSellOrders.first().getId(),apiKey,secretKey);
         }
 
 	}
@@ -225,7 +235,7 @@ void MainWindow::mainProcess()
 		}else{
 			process = 12;
 			showProcess();
-			Livecoin->cancelLimit(currensyPair,openedSellOrders.first()->getId(),apiKey,secretKey);
+			Livecoin->cancelLimit(currensyPair,openedSellOrders.first().getId(),apiKey,secretKey);
 
 		}
 	}
@@ -235,7 +245,7 @@ void MainWindow::mainProcess()
 		{
 			process = 14;
 			showProcess();
-			Livecoin->cancelLimit(currensyPair,openedBuyOrders.first()->getId(),apiKey,secretKey);
+			Livecoin->cancelLimit(currensyPair,openedBuyOrders.first().getId(),apiKey,secretKey);
 		}else{
             //mainTimer->stop();
             //ui->console->append("End");
@@ -246,6 +256,8 @@ void MainWindow::mainProcess()
 
             midPrice = 0;
             summQuntity = 0;
+
+
 
             process = 0;
 				showProcess();
@@ -277,8 +289,8 @@ void MainWindow::openedBuyLimit(double orderId)
 {
 	getPaymentBalances();
 	//openedBuyOrders << new JOrder(orderId);
-	openedBuyOrders.last()->setId(orderId);
-	openedBuyOrders.last()->setType("Buy");
+	openedBuyOrders.last().setId(orderId);
+	openedBuyOrders.last().setType("Buy");
 	buyOrders.removeFirst();
 	if(!buyOrders.isEmpty())
 	{
@@ -300,10 +312,10 @@ void MainWindow::openedSellLimit(double orderId)
 	getPaymentBalances();
     if(process == 13)
     {
-        openedSellOrders << new JOrder(orderId);
-		  openedSellOrders.last()->setType("Sell");
-		  openedSellOrders.last()->setPrice(midPrice*(1+profit));
-		  openedSellOrders.last()->setQuantity(summQuntity-0.00000001);
+		  openedSellOrders <<JOrder(orderId);
+		  openedSellOrders.last().setType("Sell");
+		  openedSellOrders.last().setPrice(midPrice*(1+profit));
+		  openedSellOrders.last().setQuantity(summQuntity-0.00000001);
         process = 2;
 		  showProcess();
         showOrders();
@@ -352,8 +364,8 @@ void MainWindow::showOrders()
 	 {
 		  for(int i = 0;i<openedSellOrders.count();i++)
 		  {
-			  listOpenedOrders->addRow(openedSellOrders.at(i)->getId(),openedSellOrders.at(i)->getPrice(),openedSellOrders.at(i)->getQuantity(),
-											  openedSellOrders.at(i)->getType());
+			  listOpenedOrders->addRow(openedSellOrders.at(i).getId(),openedSellOrders.at(i).getPrice(),openedSellOrders.at(i).getQuantity(),
+											  openedSellOrders.at(i).getType());
 		  }
 
 	 }
@@ -361,8 +373,8 @@ void MainWindow::showOrders()
 	 {
 		  for(int i = 0;i<openedBuyOrders.count();i++)
 		  {
-			  listOpenedOrders->addRow(openedBuyOrders.at(i)->getId(),openedBuyOrders.at(i)->getPrice(),openedBuyOrders.at(i)->getQuantity(),
-											  openedBuyOrders.at(i)->getType());
+			  listOpenedOrders->addRow(openedBuyOrders.at(i).getId(),openedBuyOrders.at(i).getPrice(),openedBuyOrders.at(i).getQuantity(),
+											  openedBuyOrders.at(i).getType());
 		  }
 
 	 }
@@ -376,7 +388,7 @@ void MainWindow::showOrders()
 
 void MainWindow::connectWS()
 {
-	WSLivecoin->connect("ETH/USD");
+	WSLivecoin->connect(currensyPair);
 }
 
 void MainWindow::getPaymentBalances()
@@ -415,15 +427,15 @@ void MainWindow::gotOrder(JOrder order)
 {
 	if(!openedBuyOrders.isEmpty())
 	{
-		if(order.getId() == openedBuyOrders.first()->getId())
+		if(order.getId() == openedBuyOrders.first().getId())
 		{
 			if(order.getStatus() == "EXECUTED")
 			{
-				midPrice = (midPrice*summQuntity+ openedBuyOrders.first()->getPrice()*openedBuyOrders.first()->getQuantity())/(summQuntity+openedBuyOrders.first()->getQuantity());
-				summQuntity += openedBuyOrders.first()->getQuantity();
+				midPrice = (midPrice*summQuntity+ openedBuyOrders.first().getPrice()*openedBuyOrders.first().getQuantity())/(summQuntity+openedBuyOrders.first().getQuantity());
+				summQuntity += openedBuyOrders.first().getQuantity();
 
-				qDebug()<<"midPrice: "<<midPrice;
-				qDebug()<<"summQuntity: "<<summQuntity;
+				//qDebug()<<"midPrice: "<<midPrice;
+				//qDebug()<<"summQuntity: "<<summQuntity;
 				openedBuyOrders.removeFirst();
                 sendMesageToTelegram("Ордер на покупку исполнен.");
                 ui->console->append("Ордер на покупку исполнен.");
@@ -443,7 +455,7 @@ void MainWindow::gotOrder(JOrder order)
 	}
 	if(!openedSellOrders.isEmpty())
 	{
-        if(order.getId() == openedSellOrders.first()->getId())
+		  if(order.getId() == openedSellOrders.first().getId())
         {
             if(order.getStatus() == "EXECUTED")
             {
@@ -464,9 +476,10 @@ void MainWindow::gotOrder(JOrder order)
 
 void MainWindow::on_pushButton_clicked()
 {
+	 mainTimer->setInterval(10000);
     mainTimer->start();
-    watchDog->start(600000);
-    process = 0;
+	 watchDog->start(600000);
+	 process = 100;
 	 showProcess();
 
     numberOrders = ui->lineEditNumberOrders->text().toDouble();
@@ -479,6 +492,7 @@ void MainWindow::on_pushButton_clicked()
     ui->groupBox_5->setHidden(true);
     ui->console->append("Бот запущен");
     sendMesageToTelegram("Бот запущен.");
+	 mainProcess();
 }
 
 void MainWindow::resizeEvent(QResizeEvent*)
@@ -500,4 +514,15 @@ void MainWindow::showPing()
 void MainWindow::showProcess()
 {
 	processInf->setText("Process: " + QString::number((int) process));
+}
+
+void MainWindow::on_comboBoxSymbol_currentTextChanged(const QString &arg1)
+{
+	mainCurrensy.clear();
+	secondaryCurrensy.clear();
+	currensyPair.clear();
+
+	currensyPair = arg1;
+	secondaryCurrensy = arg1.mid(0,arg1.indexOf("/"));
+	mainCurrensy = arg1.mid(arg1.indexOf("/")+1, arg1.count()-1);
 }

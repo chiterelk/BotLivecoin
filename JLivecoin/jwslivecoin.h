@@ -16,12 +16,14 @@ public:
     explicit JWSLivecoin(QObject *parent = nullptr);
     ~JWSLivecoin();
 	 void connect(QString _currensyPair);
-    //void disconnect();
+	 void disconnect();
 
 private:
     QWebSocket *WSocket = new QWebSocket();
     void disconnected();
 	 void connected();
+	 bool n = false;
+
     void textMessageReceived(QString message);
 	 QString currensyPair_;
 	 QJsonDocument makeParamCandle(QString _currencyPair,QString _interval);

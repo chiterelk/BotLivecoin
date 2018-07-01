@@ -3,17 +3,15 @@
 
 #include <QObject>
 
-class JBalance : public QObject
+class JBalance
 {
-    Q_OBJECT
 public:
-    explicit JBalance(QObject *parent = nullptr);
     JBalance();
-    QString getCurrency(){return currency_;};
-    double getTotal(){return total_;};
-    double getAvailable(){return available_;};
-    double getTrade(){return trade_;};
-    double getAvailableWithdrawal(){return availableWithdrawal_;};
+	 QString getCurrency() const {return currency_;};
+	 double getTotal() const {return total_;};
+	 double getAvailable() const {return available_;};
+	 double getTrade() const {return trade_;};
+	 double getAvailableWithdrawal() const {return availableWithdrawal_;};
 
     void setCurrency(QString _currency);
     void setTotal(double _total);
@@ -27,9 +25,6 @@ private:
     double available_;
     double trade_;
     double availableWithdrawal_;
-signals:
-
-public slots:
 };
 
 #endif // JBALANCE_H

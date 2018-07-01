@@ -37,13 +37,13 @@ QVariant JListBalanceModel::data(const QModelIndex &index, int role) const
 		switch(role)
 		{
 		case Qt::DisplayRole:
-			return balance.at(row)->getCurrency();
+			return balance.at(row).getCurrency();
 		case Qt::EditRole:
-			return balance.at(row)->getCurrency();
+			return balance.at(row).getCurrency();
 		case Qt::TextAlignmentRole:
 			return Qt::AlignCenter;
 		case Qt::BackgroundColorRole:
-			if(balance.at(row)->getCurrency()=="ETH" || balance.at(row)->getCurrency()=="BTC" || balance.at(row)->getCurrency()=="USD")
+			if(balance.at(row).getCurrency()=="ETH" || balance.at(row).getCurrency()=="BTC" || balance.at(row).getCurrency()=="USD")
 			{
 				return QBrush(QColor("#F2F2F2"));
 			}
@@ -54,13 +54,13 @@ QVariant JListBalanceModel::data(const QModelIndex &index, int role) const
 		switch(role)
 		{
 		case Qt::DisplayRole:
-			return balance.at(row)->getTotal();
+			return balance.at(row).getTotal();
 		case Qt::EditRole:
-			return balance.at(row)->getTotal();
+			return QString::number(balance.at(row).getTotal(),'g',20);
 		case Qt::TextAlignmentRole:
 			return Qt::AlignCenter;
 		case Qt::BackgroundColorRole:
-			if(balance.at(row)->getCurrency()=="ETH" || balance.at(row)->getCurrency()=="BTC" || balance.at(row)->getCurrency()=="USD")
+			if(balance.at(row).getCurrency()=="ETH" || balance.at(row).getCurrency()=="BTC" || balance.at(row).getCurrency()=="USD")
 			{
 				return QBrush(QColor("#F2F2F2"));
 			}
@@ -71,13 +71,13 @@ QVariant JListBalanceModel::data(const QModelIndex &index, int role) const
 		switch(role)
 		{
 		case Qt::DisplayRole:
-			return balance.at(row)->getAvailable();
+			return balance.at(row).getAvailable();
 		case Qt::EditRole:
-			return balance.at(row)->getAvailable();
+			return QString::number(balance.at(row).getAvailable(),'g',20);
 		case Qt::TextAlignmentRole:
 			return Qt::AlignCenter;
 		case Qt::BackgroundColorRole:
-			if(balance.at(row)->getCurrency()=="ETH" || balance.at(row)->getCurrency()=="BTC" || balance.at(row)->getCurrency()=="USD")
+			if(balance.at(row).getCurrency()=="ETH" || balance.at(row).getCurrency()=="BTC" || balance.at(row).getCurrency()=="USD")
 			{
 				return QBrush(QColor("#F2F2F2"));
 			}
@@ -88,13 +88,13 @@ QVariant JListBalanceModel::data(const QModelIndex &index, int role) const
 		switch(role)
 		{
 		case Qt::DisplayRole:
-			return balance.at(row)->getTrade();
+			return balance.at(row).getTrade();
 		case Qt::EditRole:
-			return balance.at(row)->getTotal();
+			return QString::number(balance.at(row).getTotal(),'g',20);
 		case Qt::TextAlignmentRole:
 			return Qt::AlignCenter;
 		case Qt::BackgroundColorRole:
-			if(balance.at(row)->getCurrency()=="ETH" || balance.at(row)->getCurrency()=="BTC" || balance.at(row)->getCurrency()=="USD")
+			if(balance.at(row).getCurrency()=="ETH" || balance.at(row).getCurrency()=="BTC" || balance.at(row).getCurrency()=="USD")
 			{
 				return QBrush(QColor("#F2F2F2"));
 			}
@@ -113,11 +113,10 @@ Qt::ItemFlags JListBalanceModel::flags(const QModelIndex &index) const
 	return Qt::ItemIsEnabled | Qt::ItemIsEditable;
 }
 
-void JListBalanceModel::setBalance(QVector<JBalance *> _balance)
+void JListBalanceModel::setBalance(QVector<JBalance> &_balance)
 {
 	balance.clear();
 	balance = _balance;
-	_balance.clear();
 	emit layoutChanged();;
 }
 QVariant JListBalanceModel::headerData(int section, Qt::Orientation orientation, int role) const

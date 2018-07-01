@@ -20,17 +20,17 @@ public:
     void setCommissionRate(double _commission_rate){    commission_rate_=_commission_rate;  };
 	 void setType(QString _type){ type_ = _type;	};
 
-    double getId(){    return id_; };
-    double getClientId(){  return clientId_;   };
-    QString getStatus(){   return status_; };
-    QString getSymbol(){   return symbol_; };
-    double getPrice(){ return price_;  };
-    double getQuantity(){  return quantity_;   };
-    double getRemainingQuantity(){ return remainingQuantity_;  };
-    double getBlocked(){   return blocked_;    };
-    double getBlockedRemain(){ return blockedRemain_;  };
-    double getCommissionRate(){   return commission_rate_;    };
-	 QString getType(){ return type_;	};
+	 double getId() const {    return id_; };
+	 double getClientId() const {  return clientId_;   };
+	 QString getStatus() const {   return status_; };
+	 QString getSymbol() const {   return symbol_; };
+	 double getPrice() const { return price_;  };
+	 double getQuantity() const {  return quantity_;   };
+	 double getRemainingQuantity() const { return remainingQuantity_;  };
+	 double getBlocked() const {   return blocked_;    };
+	 double getBlockedRemain() const { return blockedRemain_;  };
+	 double getCommissionRate() const {   return commission_rate_;    };
+	 QString getType() const { return type_;	};
 
 private:
     double id_;

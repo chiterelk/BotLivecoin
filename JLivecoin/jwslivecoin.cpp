@@ -28,18 +28,31 @@ JWSLivecoin::~JWSLivecoin()
 
 void JWSLivecoin::connect(QString _currensyPair)
 {
+	 currensyPair_ = _currensyPair;
     if(timer->isActive())
 	 {
         timer->stop();
 	 }
 	 WSocket->open(QUrl(QStringLiteral("wss://ws.api.livecoin.net/ws/beta")));
-    currensyPair_ = _currensyPair;
+	 currensyPair_ = _currensyPair;
 }
 
+void JWSLivecoin::disconnect()
+{
+	n = true;
+	WSocket->disconnect();
+}
 void JWSLivecoin::disconnected()
 {
+
     qDebug()<<"Disconnected!";
-    timer->start();
+	 if(n==true)
+	 {
+		 n = false;
+	 }else{
+		 timer->start();
+	 }
+
 }
 void JWSLivecoin::connected()
 {
@@ -71,13 +84,13 @@ void JWSLivecoin::textMessageReceived(QString message)
 		 QJsonObject root = doc.object();
 		 if(!root.value("operation").isObject())
 		 {
-			 if(root.value("channelId").toString() == "ETH/USD_ticker")
+			 if(root.value("channelId").toString() == (currensyPair_+"_ticker"))
 			 {
 				 JTicker ticker;
 				 ticker.setBidAndAsk(root.value("bestBid").toDouble(),root.value("bestAsk").toDouble());
 				 emit gotTicker(ticker);
 			 }
-			 if(root.value("channelId").toString() == "ETH/USD_candle")
+			 if(root.value("channelId").toString() == (currensyPair_+"_candle"))
 			 {
 				 JCandle candle;
 				 candle.setTime(root.value("t").toDouble());

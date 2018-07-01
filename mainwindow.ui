@@ -129,7 +129,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="comboBox">
+          <widget class="QComboBox" name="comboBoxStrategy">
            <item>
             <property name="text">
              <string>Long</string>
@@ -143,10 +143,15 @@
           </widget>
          </item>
          <item row="0" column="0">
-          <widget class="QComboBox" name="comboBox_2">
+          <widget class="QComboBox" name="comboBoxSymbol">
            <item>
             <property name="text">
              <string>ETH/USD</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>XEM/ETH</string>
             </property>
            </item>
           </widget>
@@ -157,7 +162,7 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QGroupBox" name="groupBox">
+     <widget class="QGroupBox" name="groupBoxPair">
       <property name="title">
        <string>Pair:</string>
       </property>
@@ -263,7 +268,7 @@
           <bool>false</bool>
          </property>
          <attribute name="horizontalHeaderVisible">
-          <bool>true</bool>
+          <bool>false</bool>
          </attribute>
          <attribute name="verticalHeaderVisible">
           <bool>false</bool>

@@ -222,7 +222,7 @@ void JLivecoin::gotData(QNetworkReply *reply)
             {
                 QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8());
                 QJsonArray root = doc.array();
-					 QVector<JBalance*> wallet;
+					 QVector<JBalance> wallet;
                 if(root.count() > 0)
                 {
 
@@ -231,25 +231,25 @@ void JLivecoin::gotData(QNetworkReply *reply)
                     {
                         if(currency != root.at(i).toObject().value("currency").toString())
                         {
-									 wallet << new JBalance(this);
-									 wallet.last()->setCurrency(root.at(i).toObject().value("currency").toString());
+									 wallet << JBalance();
+									 wallet.last().setCurrency(root.at(i).toObject().value("currency").toString());
                             currency = root.at(i).toObject().value("currency").toString();
                         }
                         if(root.at(i).toObject().value("type").toString() == "total")
                         {
-									 wallet.last()->setTotal(root.at(i).toObject().value("value").toDouble());
+									 wallet.last().setTotal(root.at(i).toObject().value("value").toDouble());
                         }
                         if(root.at(i).toObject().value("type").toString() == "available")
                         {
-									 wallet.last()->setAvailable(root.at(i).toObject().value("value").toDouble());
+									 wallet.last().setAvailable(root.at(i).toObject().value("value").toDouble());
                         }
                         if(root.at(i).toObject().value("type").toString() == "trade")
                         {
-									 wallet.last()->setTrade(root.at(i).toObject().value("value").toDouble());
+									 wallet.last().setTrade(root.at(i).toObject().value("value").toDouble());
                         }
                         if(root.at(i).toObject().value("type").toString() == "available_withdrawal")
                         {
-									 wallet.last()->setAvailableWithdrawal(root.at(i).toObject().value("value").toDouble());
+									 wallet.last().setAvailableWithdrawal(root.at(i).toObject().value("value").toDouble());
                         }
 
 
@@ -314,6 +314,7 @@ void JLivecoin::gotData(QNetworkReply *reply)
         qDebug()<<"Error: "<<reply->errorString()<<'.';
 		  emit error(reply->errorString());
 	 }
+	 reply->deleteLater();
 }
 
 

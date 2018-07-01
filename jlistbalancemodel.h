@@ -15,10 +15,10 @@ public:
 	int columnCount(const QModelIndex &parent) const;
 	QVariant data(const QModelIndex &index, int role) const;
 	Qt::ItemFlags flags(const QModelIndex &index) const;
-	void setBalance(QVector<JBalance*> _balance);
+	void setBalance(QVector<JBalance> &_balance);
 	QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 private:
-	QVector<JBalance*> balance;
+	QVector<JBalance> balance;
 };
 
 #endif // JLISTBALANCEMODEL_H

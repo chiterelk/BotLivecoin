@@ -39,7 +39,7 @@ private:
 
 signals:
     void gotMaxBidMinAsk(JMaxBidMinAsk);
-	 void gotBalance(QVector<JBalance*>);
+	 void gotBalance(QVector<JBalance>);
     void openedSellLimit(double orderId);
     void openedBuyLimit(double orderId);
     void canceledLimit(double quantity, double tradeQuantity);

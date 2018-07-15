@@ -11,9 +11,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
 {
+
 	ui->setupUi(this);
 	ui->groupBoxPair->hide();
-
+	process = 100;
 	on_comboBoxSymbol_currentTextChanged(ui->comboBoxSymbol->currentText());
 	
 	connect(WSLivecoin,&JWSLivecoin::gotTicker,this,&MainWindow::gotTicker);
@@ -74,6 +75,7 @@ void MainWindow::gotTicker(JTicker ticker)
 		 process = 0;
 		 ui->groupBoxPair->show();
 	 }
+
 }
 
 void MainWindow::gotCandles(QList<JCandle> _candles)

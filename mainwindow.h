@@ -62,7 +62,7 @@ private:
 
 	double minValueUsd = 0.0;
 
-    unsigned int process = 100;
+	 unsigned int process;
 
 	int period = 5000;
 
